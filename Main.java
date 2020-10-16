@@ -2,7 +2,7 @@
 // Java program For handling Input/Output 
 import java.io.*;
 import java.util.*;
-// import java.math.*;
+//import java.math.*;
 //import java.awt.*;
 
 public class Main {
@@ -18,52 +18,51 @@ public class Main {
 
     // actual logic
     void solve() throws IOException {
-        // int t = ni();
-        // while (--t >= 0) {
         int n = ni();
-        int m = ni();
-        int k = ni();
+        int q = ni();
+        Map<Integer, List<Integer>> g = new HashMap<>();
 
-        int a[] = new int[n];
-        int b[] = new int[m];
-
-        for (int i = 0; i < n; i++)
-            a[i] = ni();
-
-        for (int i = 0; i < m; i++)
-            b[i] = ni();
-
-        int x = 0;
-        int y = 0;
-        int ans = 0;
-
-        while (k > 0 && (x < n || y < m)) {
-            if (x < n && y < n) {
-                if (a[x] < b[y]) {
-                    k -= a[x];
-                    x++;
-                } else {
-                    k -= b[y];
-                    y++;
-                }
-            } else if (x < n) {
-                k -= a[x];
-                x++;
-            } else if (y < m) {
-                k -= b[y];
-                y++;
-            } else {
-                break;
-            }
-
-            if (k < 0)
-                break;
-            ans++;
+        for (int i = 1; i <= n; i++) {
+            g.put(i, new LinkedList<Integer>());
         }
+        for (int i = 0; i < q; i++) {
+            int x = ni();
+            int y = ni();
+            g.get(x).add(y);
+            g.get(y).add(x);
+        }
+        System.out.println(g);
+        boolean visited[] = new boolean[n + 1];
+        Stack<Integer> stack = new Stack<>();
+        rdfs(1, visited, g);
 
-        pl(ans);
-        // }
+        boolean v[] = new boolean[n + 1];
+        System.out.println("\n----------------------------------------------------------------");
+        stack.push(1);
+        while (!stack.isEmpty()) {
+            int temp = stack.pop();
+            System.out.println(temp);
+            v[temp] = true;
 
+            for (int i : g.get(temp)) {
+                if (!v[i]) {
+                    v[i] = true;
+                    stack.push(i);
+                }
+            }
+        }
+    }
+
+    void rdfs(int v, boolean visited[], Map<Integer, List<Integer>> g) {
+        System.out.println(v);
+        visited[v] = true;
+
+        List<Integer> l = g.get(v);
+        for (int i = 0; i < l.size(); i++) {
+            if (!visited[l.get(i)]) {
+                rdfs(l.get(i), visited, g);
+            }
+        }
     }
 
     // constructor
